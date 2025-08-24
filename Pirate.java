@@ -41,7 +41,6 @@ public class Pirate {
         this.health -= damage;
         if (this.health <= 0) {
             this.health = 0;
-            System.out.println("\nYou are dead. Game over.");
         }
     }
 
