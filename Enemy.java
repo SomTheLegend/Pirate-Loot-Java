@@ -62,6 +62,9 @@ public class Enemy {
             pirate.takeDamage(this.damage);
             System.out.println("The " + name + " hit you for " + this.damage
                     + " damage. Your health is now " + pirate.health + ".");
+            if (!pirate.isAlive()) {
+                System.out.println("You have been defeated!");
+            }
         } else {
             System.out.println("The " + name + " missed!");
         }

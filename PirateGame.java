@@ -139,9 +139,15 @@ public class PirateGame {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to Pirate's Loot!");
         System.out.print("Enter your pirate's name: ");
-        String pirateName = scanner.nextLine();
+        String pirateName;
+        try {
+            pirateName = scanner.nextLine();
+        } catch (NoSuchElementException e) {
+            pirateName = "";
+        }
         if (pirateName.trim().isEmpty()) {
             pirateName = "Captain Fearless";
+            System.out.println("\nNo name entered, welcome Captain Fearless!");
         }
 
         Pirate pirate = new Pirate(pirateName);

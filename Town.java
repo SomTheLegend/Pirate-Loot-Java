@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.NoSuchElementException;
 
 /**
  * Represents a town that the pirate can visit.
@@ -85,11 +86,16 @@ public class Town {
             Enemy enemy = currentEnemies.get(0);
             System.out.println("\nA wild " + enemy.name + " appears! " +
                     "(Health: " + enemy.health + ")");
-            battle(pirate, enemy, scanner);
+            boolean victory = battle(pirate, enemy, scanner);
 
             if (pirate.isAlive()) {
-                System.out.println("You defeated the " + enemy.name + "!");
-                currentEnemies.remove(0);
+                if (victory) {
+                    System.out.println("You defeated the " + enemy.name + "!");
+                    currentEnemies.remove(0);
+                } else {
+                    System.out.println("You fled from " + name + " with your tail between your legs!");
+                    return;
+                }
             }
         }
 
@@ -135,12 +141,10 @@ public class Town {
                         break;
                 }
             }
-        } else {
-            System.out.println("You were defeated in battle in " + name + "...");
         }
     }
 
-    private void battle(Pirate pirate, Enemy enemy, Scanner scanner) {
+    private boolean battle(Pirate pirate, Enemy enemy, Scanner scanner) {
 
         while (pirate.isAlive() && enemy.isAlive()) {
             pirate.changeWeapon(scanner);
@@ -148,7 +152,12 @@ public class Town {
             System.out.println("1. Attack with " + pirate.currentWeapon.getLowercaseName());
             System.out.println("2. Try to flee");
             System.out.print("Enter your choice: ");
-            String choice = scanner.nextLine();
+            String choice;
+            try {
+                choice = scanner.nextLine();
+            } catch (NoSuchElementException e) {
+                choice = "1"; // Default to attacking
+            }
 
             if ("1".equals(choice)) {
                 if (random.nextDouble() < pirate.currentWeapon.accuracy) {
@@ -162,7 +171,7 @@ public class Town {
             } else if ("2".equals(choice)) {
                 if (random.nextDouble() < 0.4) {
                     System.out.println("You successfully fled from the battle!");
-                    return;
+                    return false; // Fled
                 } else {
                     System.out.println("You failed to flee!");
                 }
@@ -174,5 +183,6 @@ public class Town {
 
             enemy.attack(pirate);
         }
+        return true; // Victorious
     }
 }
